@@ -4,7 +4,8 @@ import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:uuid/uuid.dart';
 import 'package:flutter/cupertino.dart';
 
-import 'package:chat_app/sdk/gpt_caller.dart';
+import 'package:chat_app/sdk/chat_backend.dart';
+import 'package:chat_app/colors.dart';
 
 void main() {
   runApp(const MainApp());
@@ -29,18 +30,19 @@ class ChatPage extends StatefulWidget {
   final String title;
 
   @override
+  // ignore: library_private_types_in_public_api
   _ChatPageState createState() => _ChatPageState();
 }
 
 class _ChatPageState extends State<ChatPage> {
-  List<types.Message> _messages = [];
+  final List<types.Message> _messages = [];
   final _user = const types.User(
     id: '82091008-a484-4a89-ae75-a22bf8d6f3ac',
     lastName: "John",
     firstName: "Doe",
   );
 
-  final _user_chatgpt = const types.User(
+  final _userChatgpt = const types.User(
     id: '82091008-a484-4a89-ae75-a22bf8d6f3ad',
     lastName: "GPT",
     firstName: "Chat",
@@ -51,11 +53,19 @@ class _ChatPageState extends State<ChatPage> {
         appBar: AppBar(
           title: Text(widget.title),
           centerTitle: true,
-          backgroundColor: Colors.purple,
+          backgroundColor: darkPurple,
           actions: [
             IconButton(
-              onPressed: () {},
-              icon: const Icon(CupertinoIcons.heart),
+              onPressed: () {
+                _onIconPressed();
+              },
+              icon: const Icon(
+                Icons.favorite,
+                color: Colors.red,
+                size: 24.0,
+                semanticLabel: 'Show bookmarks',
+              ),
+              tooltip: "Show bookmarks",
             ),
           ],
         ),
@@ -67,9 +77,8 @@ class _ChatPageState extends State<ChatPage> {
           showUserNames: true,
           user: _user,
           theme: const DefaultChatTheme(
-            inputBackgroundColor: Colors.purple,
-            primaryColor: Colors.purple,
-            secondaryColor: Colors.purple,
+            inputBackgroundColor: darkPurple,
+            primaryColor: darkPurple,
             inputBorderRadius: BorderRadius.all(Radius.circular(20)),
             inputMargin: EdgeInsets.all(10),
           ),
@@ -93,9 +102,9 @@ class _ChatPageState extends State<ChatPage> {
     _addMessage(textMessage);
 
     // Send prompt to chatGPT
-    GptCaller.askChatGpt(message.text).then((response) {
+    ChatBackend.askChatGpt(message.text).then((response) {
       final gptMessage = types.TextMessage(
-        author: _user_chatgpt,
+        author: _userChatgpt,
         createdAt: DateTime.now().millisecondsSinceEpoch,
         id: const Uuid().v4(),
         text: response,
@@ -106,8 +115,46 @@ class _ChatPageState extends State<ChatPage> {
 
   void _onMessageDoubleTap(BuildContext _, types.Message message) async {
     if (message is types.TextMessage) {
-      GptCaller.addBookmark(message.text);
-      print("Data saved to bookmarks");
+      ChatBackend.addBookmark(message.text);
     }
+  }
+
+  void _onIconPressed() {
+    ChatBackend.getAllBookmarks().then((bookmarks) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text("All time favorites"),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: bookmarks
+                    .map((bookmark) => Container(
+                        decoration: BoxDecoration(
+                          color: lightPurple,
+                          border: Border.all(
+                            color: Colors.black,
+                            width: 0.5,
+                          ),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        margin: EdgeInsets.all(10),
+                        padding: EdgeInsets.all(10),
+                        child: Text(bookmark)))
+                    .toList(growable: false),
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text("Close"),
+              ),
+            ],
+          );
+        },
+      );
+    });
   }
 }
