@@ -1,0 +1,10 @@
+name: chatgpt-dart-test
+cloudProvider: aws
+region: eu-central-1
+sdk:
+  options: {}
+  language: dart
+  path: ../client/chat_app/lib/sdk
+classes:
+  - path: lib/gpt_caller.dart
+    name: "GptCaller"
