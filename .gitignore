@@ -134,3 +134,6 @@ app.*.symbols
 
 # Env variables
 **/.env*
+
+# genezio SDK
+**/sdk
