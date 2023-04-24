@@ -18,7 +18,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       home: ChatPage(
-        title: "Chat with ChatGPT ",
+        title: "Full Stack Dart Chat App",
       ),
       debugShowCheckedModeBanner: false,
     );
@@ -35,18 +35,30 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
-  final List<types.Message> _messages = [];
   final _user = const types.User(
     id: '82091008-a484-4a89-ae75-a22bf8d6f3ac',
     lastName: "John",
     firstName: "Doe",
   );
-
   final _userChatgpt = const types.User(
     id: '82091008-a484-4a89-ae75-a22bf8d6f3ad',
-    lastName: "GPT",
-    firstName: "Chat",
+    lastName: "",
+    firstName: "Yoda",
   );
+
+  final List<types.Message> _messages = [];
+
+  @override
+  void initState() {
+    super.initState();
+    final first_message = types.TextMessage(
+      author: _userChatgpt,
+      createdAt: DateTime.now().millisecondsSinceEpoch,
+      id: const Uuid().v4(),
+      text: "Yoda, my name is. Help you, how can I?",
+    );
+    _messages.add(first_message);
+  }
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -102,7 +114,7 @@ class _ChatPageState extends State<ChatPage> {
     _addMessage(textMessage);
 
     // Send prompt to chatGPT
-    ChatBackend.askChatGpt(message.text).then((response) {
+    ChatBackend.askYoda(message.text).then((response) {
       final gptMessage = types.TextMessage(
         author: _userChatgpt,
         createdAt: DateTime.now().millisecondsSinceEpoch,
@@ -125,7 +137,12 @@ class _ChatPageState extends State<ChatPage> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
+            backgroundColor: gray,
             title: const Text("All time favorites"),
+            titleTextStyle: const TextStyle(
+              color: Colors.black,
+              fontSize: 20,
+            ),
             content: SingleChildScrollView(
               child: ListBody(
                 children: bookmarks
@@ -133,7 +150,7 @@ class _ChatPageState extends State<ChatPage> {
                         decoration: BoxDecoration(
                           color: lightPurple,
                           border: Border.all(
-                            color: Colors.black,
+                            color: lightPurple,
                             width: 0.5,
                           ),
                           borderRadius: BorderRadius.circular(10),

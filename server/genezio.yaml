@@ -1,14 +1,18 @@
 name: chat-with-chatgpt
-cloudProvider: aws
 region: eu-central-1
+cloudProvider: aws
 sdk:
-  options: {}
   language: dart
+  options:
+    runtime: null
   path: ../client/chat_app/lib/sdk
 scripts:
-  preFrontendDeploy: "cd ../client/chat_app/ && flutter clean && flutter pub get && flutter build web"
+  preFrontendDeploy: cd ../client/chat_app/ && flutter clean && flutter pub get && flutter build web
 frontend:
-  path: client/chat_app/build/web
+  path: ../client/chat_app/build/web
+  subdomain: chat-with-chatgpt
 classes:
-  - path: lib/gpt_caller.dart
+  - path: lib/chat_backend.dart
     name: "ChatBackend"
+    type: jsonrpc
+    methods: []
