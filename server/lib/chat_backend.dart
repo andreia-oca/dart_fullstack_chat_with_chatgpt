@@ -1,12 +1,27 @@
+import 'dart:io';
+import 'package:dotenv/dotenv.dart' show load, env;
+
 import 'package:dart_openai/openai.dart';
 import 'package:mongo_dart/mongo_dart.dart';
-import 'package:chat_with_chatgpt/constants.dart';
 
 class ChatBackend {
   Db? db = null;
 
   // Private constructor
   ChatBackend() {
+    // Load environment variables from .env file
+    load();
+    String? OPENAPI_KEY = null;
+    OPENAPI_KEY = Platform.environment['OPENAPI_KEY'];
+    if (OPENAPI_KEY == null) {
+      // Load environment variables from .env file
+      load();
+      OPENAPI_KEY = env['OPENAPI_KEY'];
+      if (OPENAPI_KEY == null) {
+        throw "OPENAPI_KEY is null";
+      }
+    }
+
     // Set the OpenAI API key
     OpenAI.apiKey = OPENAPI_KEY;
   }
@@ -50,6 +65,18 @@ class ChatBackend {
   }
 
   Future<String> _connect() async {
+    String? MONGODB_URI = null;
+    MONGODB_URI = Platform.environment['MONGODB_URI'];
+    if (MONGODB_URI == null) {
+      // Load environment variables from .env file
+      load();
+      MONGODB_URI = env['MONGODB_URI'];
+      if (MONGODB_URI == null) {
+        throw "MONGODB_URI is null";
+      }
+    }
+
+    print(MONGODB_URI);
     // Connect to the database
     db = await Db.create(MONGODB_URI).catchError((e) {
       print("Error connecting to database: $e");
