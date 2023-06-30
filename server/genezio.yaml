@@ -1,12 +1,10 @@
 name: chat-with-chatgpt
 region: eu-central-1
-cloudProvider: aws
 sdk:
   language: dart
-  options:
-    runtime: null
   path: ../client/chat_app/lib/sdk
 scripts:
+  preBackendDeploy: dart pub get
   preFrontendDeploy: cd ../client/chat_app/ && flutter clean && flutter pub get && flutter build web
 frontend:
   path: ../client/chat_app/build/web

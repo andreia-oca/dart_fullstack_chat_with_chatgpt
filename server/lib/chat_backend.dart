@@ -19,8 +19,20 @@ class ChatBackend {
     ];
 
     // Create a chat OpenAI instance
-    final chat = await OpenAI.instance.chat
-        .create(model: "gpt-3.5-turbo", messages: my_msg);
+    var chat;
+    try {
+      chat = await OpenAI.instance.chat
+          .create(model: "gpt-3.5-turbo", messages: my_msg, stop: ["\n\n"]);
+    } catch (e) {
+      if (e is RequestFailedException && e.statusCode == 401) {
+        print(
+            "OpenAI request failed: $e. Your OpenAI API key might be invalid");
+        return "OpenAI request failed: $e. Your OpenAI API key might be invalid";
+      }
+
+      print("OpenAI request failed: $e");
+      return "OpenAI request failed: $e";
+    }
 
     // Return the response from chatGPT
     return chat.choices.first.message.content;
