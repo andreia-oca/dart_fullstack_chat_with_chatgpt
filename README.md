@@ -6,9 +6,9 @@
 
 </div>
 
-## You can check [a beta chat application integrated with Chat GPT here](https://chat-with-chatgpt.dev.app.genez.io/).
+## You can check [a beta chat application integrated with Chat GPT here](https://chat-with-chatgpt.app.genez.io/).
 
-Welcome to our demo chat app integrated with Chat GPT, written in Flutter (frontend), Dart(backend), MongoDB as a datavase and deployed [genezio](https://genez.io).
+Welcome to our demo chat app integrated with Chat GPT, written in Flutter (frontend), Dart(backend), MongoDB as a database and deployed [genezio](https://genez.io).
 
 This app allows users to engage in conversations with a chatbot powered by Chat GPT. This app is meant to be a demo for a technical talk on the topic of building full stack apps with Dart and genezio.
 
@@ -20,7 +20,7 @@ If you want to deploy this demo and play around with it, follow these steps:
 2. Login on the genezio platform: `genezio login`
 3. Clone this repo: `git clone https://github.com/andreia-oca/dart_fullstack_chat_with_chatgpt`
 4. Head to the server directory and test it locally with: `genezio local`
-5. When you are happy with the local version, deploy it on our infrastracture with: `genezio deploy`
+5. When you are happy with the local version, deploy it on our infrastructure with: `genezio deploy`
 6. Brag about it to your friends! You can share the frontend link to your friends and colleagues and let them play around with your new features.
 
 ## Learn more
